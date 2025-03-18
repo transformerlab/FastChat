@@ -18,6 +18,8 @@ from transformers import (
     AutoConfig,
     AutoModel,
     AutoModelForCausalLM,
+    Gemma3TextConfig,
+    Gemma3ForConditionalGeneration,
     AutoModelForSeq2SeqLM,
     AutoTokenizer,
     LlamaTokenizer,
@@ -116,12 +118,25 @@ class BaseModelAdapter:
                 model_path, use_fast=False, revision=revision, trust_remote_code=True
             )
         try:
-            model = AutoModelForCausalLM.from_pretrained(
-                model_path,
-                low_cpu_mem_usage=True,
-                trust_remote_code=True,
-                **from_pretrained_kwargs,
-            )
+            if "gemma-3" in model_path:
+                print
+                from_pretrained_kwargs['torch_dtype'] = torch.bfloat16
+                config = Gemma3TextConfig.from_pretrained(model_path)
+                model = AutoModelForCausalLM.from_pretrained(
+                    model_path,
+                    low_cpu_mem_usage=True,
+                    trust_remote_code=True,
+                    config=config,
+                    **from_pretrained_kwargs,
+                    
+                )
+            else:
+                model = AutoModelForCausalLM.from_pretrained(
+                    model_path,
+                    low_cpu_mem_usage=True,
+                    trust_remote_code=True,
+                    **from_pretrained_kwargs,
+                )
         except NameError:
             model = AutoModel.from_pretrained(
                 model_path,

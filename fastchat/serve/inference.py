@@ -14,6 +14,7 @@ import torch
 from transformers import (
     AutoTokenizer,
     AutoModelForCausalLM,
+    Gemma3TextConfig,
     LlamaTokenizer,
     LlamaForCausalLM,
     AutoModel,
