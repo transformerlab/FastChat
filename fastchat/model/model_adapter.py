@@ -119,7 +119,6 @@ class BaseModelAdapter:
             )
         try:
             if "gemma-3" in model_path:
-                print
                 from_pretrained_kwargs['torch_dtype'] = torch.bfloat16
                 config = Gemma3TextConfig.from_pretrained(model_path)
                 model = AutoModelForCausalLM.from_pretrained(
